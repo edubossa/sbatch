@@ -1,0 +1,54 @@
+job:
+  topic: ${TOPIC:batch-xml}
+  subscription: ${SUBSCRIPTION:batch-sub}
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          task: debug
+
+spring:
+  batch:
+    initialize-schema: always
+  cloud:
+    gcp:
+      pubsub:
+        publisher:
+          executor-threads: ${PUBLISHER_THREADS:20}
+          retry:
+            max-attempts: ${MAX_ATTEMPTS:5}
+            initial-retry-delay-seconds: ${INITIAL_RETRY_DELAY_SECONDS:10}
+            max-retry-delay-seconds: ${MAX_RETRY_DELAY_SECONDS:30}
+            initial-rpc-timeout-seconds: ${INITIAL_RPC_TIMEOUT_SECONDS:10}
+            max-rpc-timeout-seconds: ${MAX_RPC_TIMEOUT_SECONDS:30}
+            total-timeout-seconds: ${TOTAL_TIMEOUT_SECONDS:60}
+        subscriber:
+          executor-threads: ${SUBSCRIBER_THREADS:20}
+          max-acknowledgement-threads: ${MAX_ACKNOWLEDGEMENT_THREADS:20}
+          retry:
+            max-attempts: ${MAX_ATTEMPTS:5}
+            initial-retry-delay-seconds: ${INITIAL_RPC_TIMEOUT_SECONDS:10}
+            max-retry-delay-seconds: ${MAX_RETRY_DELAY_SECONDS:30}
+            initial-rpc-timeout-seconds: ${INITIAL_RPC_TIMEOUT_SECONDS:10}
+            max-rpc-timeout-seconds: ${MAX_RPC_TIMEOUT_SECONDS:30}
+            total-timeout-seconds: ${TOTAL_TIMEOUT_SECONDS:60}
+  datasource:
+    initialization-mode: always
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/batch}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      connection-timeout: ${CONNECTION_TIMEOUT:90000}
+      leak-detection-threshold: 90000
+      max-lifetime: ${MAX_LIFETIME:1800000}
+      minimum-idle: ${MINIMUM_IDLE:20}
+      maximum-pool-size: ${MAXIMUM_POOL_SIZE:100}
+      idle-timeout: ${IDLE_TIMEOUT:600000}
+
+
+# partitioner image configuration
+particionamento:
+  #image: file:edubossa/my-image
+  image: file:/Users/wallace/app/bv/sbatch-arqt-refe-atom-partitioned-pubsub-to-pubsub/target/sbatch-arqt-refe-atom-partitioned-pubsub-to-pubsub-1.0.0.jar
